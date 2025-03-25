@@ -2,7 +2,7 @@
 <html
   lang="en"
   xmlns:th="http://www.thymeleaf.org"
-  data-th-replace="~{base :: parent(~{::#content}, ~{::title}, ~{::script})}"
+  th:replace="~{base :: parent(~{::#content}, ~{::title}, ~{::script})}"
 >
   <head>
     <title>Register page</title>
@@ -11,60 +11,55 @@
   <body>
     <div id="content">
       <div
-        class="w-full max-w-lg p-6 mx-auto mt-2 bg-white border-t-4 border-b-2 border-blue-700 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-blue-600"
+        class="w-full max-w-lg p-6 mx-auto mt-4 bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700"
       >
-        <div data-th-replace="~{message::messagebox}"></div>
-        <form
-          class="space-y-6"
-          data-th-action="@{'/do-register'}"
+        <!-- this is form -->
+        <form class="space-y-6"
+         data-th-action="@{/do-register}"
           method="post"
-          data-th-object="${userForm}"
-          novalidate
-        >
-          <!-- action is responsible for form submission, html optimized is data-th-action instead of th:action -->
-
-          <!-- Message here-->
-
+          data-th-object="${userForm}">
           <h5
             class="text-3xl font-medium text-center text-gray-900 dark:text-white"
           >
             Create an account
           </h5>
 
-          <!-- Name (Full Row) -->
-          <div>
-            <label
-              for="name"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white -mt-4"
-              >Full Name</label
-            >
-            <input
-              type="text"
-              name="name"
-              id="name"
-              data-th-field="*{name}"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Enter your full name"
-              required
-            />
+          <div class="flex gap-y-6 space-x-4">
+            <!-- First Name -->
+            <div class="w-1/2">
+              <label
+                for="first_name"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >First Name</label
+              >
+              <input
+                data-th-field="*{firstName}"
+                type="text"
+                name="first_name"
+                id="first_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                placeholder="First Name"
+                required
+              />
+            </div>
 
-            <ul
-              data-th-if="${#fields.hasErrors('name')}"
-              class="text-red-500 px-1 py-1"
-            >
-              <li
-                data-th-each="err : ${#fields.errors('name')}"
-                data-th-text="${err}"
-              ></li>
-            </ul>
-
-            <!-- <p
-              data-th-if="${#fields.hasErrors('name')}"
-              date-th-errors="*{name}"
-              class="text-red-500 px-1 py-1"
-            >
-              Name is required
-            </p> -->
+            <!-- Last Name -->
+            <div class="w-1/2">
+              <label
+                for="last_name"
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >Last Name</label
+              >
+              <input
+                data-th-field="*{lastName}"
+                type="text"
+                name="last_name"
+                id="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                placeholder="Last Name"
+                required
+              />
+            </div>
           </div>
 
           <div class="flex gap-y-6 space-x-4">
@@ -76,51 +71,32 @@
                 >Your Email</label
               >
               <input
+                data-th-field="*{email}"
                 type="email"
                 name="email"
                 id="email"
-                data-th-field="*{email}"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 placeholder="name@company.com"
                 required
               />
-
-              <ul
-                data-th-if="${#fields.hasErrors('email')}"
-                class="text-red-500 px-1 py-1"
-              >
-                <li
-                  data-th-each="err : ${#fields.errors('email')}"
-                  data-th-text="${err}"
-                ></li>
-              </ul>
             </div>
 
             <!-- Phone Number -->
             <div class="w-1/2">
               <label
-                for="phoneNumber"
+                for="phone_number"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                 >Your Phone Number</label
               >
               <input
-                type="tel"
-                name="phoneNumber"
-                id="phoneNumber"
                 data-th-field="*{phoneNumber}"
+                type="tel"
+                name="phone_number"
+                id="phone_number"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 placeholder="+91-9878984898"
                 required
               />
-              <ul
-                data-th-if="${#fields.hasErrors('phoneNumber')}"
-                class="text-red-500 px-1 py-1"
-              >
-                <li
-                  data-th-each="err : ${#fields.errors('phoneNumber')}"
-                  data-th-text="${err}"
-                ></li>
-              </ul>
             </div>
           </div>
 
@@ -133,10 +109,10 @@
                 >Password</label
               >
               <input
+                data-th-field="*{password}"
                 type="password"
                 name="password"
                 id="password"
-                data-th-field="*{password}"
                 placeholder="••••••••"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                 required
@@ -148,15 +124,6 @@
               >
                 👁
               </button>
-              <ul
-                data-th-if="${#fields.hasErrors('password')}"
-                class="text-red-500 px-1 py-1"
-              >
-                <li
-                  data-th-each="err : ${#fields.errors('password')}"
-                  data-th-text="${err}"
-                ></li>
-              </ul>
             </div>
 
             <!-- Confirm Password -->
@@ -164,8 +131,9 @@
               <label
                 for="confirm_password"
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                >Confirm Password</label
               >
+                Confirm Password
+              </label>
               <input
                 type="password"
                 name="confirm_password"
@@ -177,39 +145,11 @@
             </div>
           </div>
 
-          <!-- About (Write something about yourself) -->
-          <div>
-            <label
-              for="about"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Write something about yourself
-            </label>
-            <textarea
-              name="about"
-              id="about"
-              rows="4"
-              data-th-field="*{about}"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder="Tell us about yourself..."
-              required
-            ></textarea>
-            <ul
-              data-th-if="${#fields.hasErrors('about')}"
-              class="text-red-500 px-1 py-1"
-            >
-              <li
-                data-th-each="err : ${#fields.errors('about')}"
-                data-th-text="${err}"
-              ></li>
-            </ul>
-          </div>
-
           <div class="flex items-start">
             <div class="flex items-start">
               <div class="flex items-center h-5">
                 <input
-                  id="termsCondition"
+                  id="remember"
                   type="checkbox"
                   value=""
                   class="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
@@ -217,39 +157,34 @@
                 />
               </div>
               <label
-                for="termsCondition"
+                for="terms_condition"
                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                 >I accept the
                 <a
                   href="#"
                   class="text-blue-700 hover:underline dark:text-blue-500"
-                  >Terms and Conditions</a
-                >
+                  >Terms and Conditions
+                </a>
               </label>
             </div>
+            <!-- <a href="#" class="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Lost
+                        Password?</a> -->
           </div>
-
           <button
             type="submit"
-            class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 -mb-2"
+            class="w-full text-white text bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
             Create an account
           </button>
-
-          <div
-            class="text-sm font-medium text-gray-500 dark:text-gray-300 -mt-8"
-          >
-            Already have an account?
-            <a
-              data-th-href="@{'/login'}"
-              class="text-blue-700 hover:underline dark:text-blue-500"
-              >Login here</a
-            >
+          <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+            Already have an acoount?
+            <a href="#" class="text-blue-700 hover:underline dark:text-blue-500"
+              >Login here
+            </a>
           </div>
         </form>
       </div>
     </div>
-
     <script>
       console.log("Register page");
     </script>
