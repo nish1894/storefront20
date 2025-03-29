@@ -26,7 +26,9 @@ public class UserForm {
     private String firstName;
     private String lastName;
 
-//    @DateTimeFormat(pattern = "dd/MM/yyyy")
-//     private LocalDate DOB;
+
+
+   @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate DOB;
 
 }

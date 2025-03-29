@@ -3,13 +3,20 @@ package com.storefront.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.storefront.entities.User;
 import com.storefront.forms.UserForm;
+import com.storefront.helpers.Message;
+import com.storefront.helpers.MessageType;
 import com.storefront.services.UserService;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 
 @Controller
 public class PageController {
@@ -45,6 +52,8 @@ public class PageController {
     public String register(Model model){
         UserForm userForm = new UserForm();
 
+        userForm.setDOB(java.time.LocalDate.parse("2001-01-01"));
+
         model.addAttribute("userForm",userForm);
 
 
@@ -53,9 +62,13 @@ public class PageController {
 
     // processing register
     @RequestMapping(value = "/do-register", method =RequestMethod.POST)
-    public String processRegister(@ModelAttribute UserForm userForm){
+    public String processRegister(@Valid @ModelAttribute UserForm userForm, BindingResult rBindingResult, HttpSession session){
         System.out.println("Processing Registration form");
 
+        //validate form 
+        if(rBindingResult.hasErrors()){
+            return "register";
+        }
 
         User user = new User();
         
@@ -64,14 +77,19 @@ public class PageController {
         user.setEmail(userForm.getEmail());
         user.setPhoneNumber(userForm.getPhoneNumber());
         user.setPassword(userForm.getPassword());
+        user.setDOB(userForm.getDOB());
 
         User savedUser = userService.saveUser(user);
         System.out.println("user saved with ID: " + savedUser.getUserId());
+
+        Message message =Message.builder().content("Registration successful").type(MessageType.Green).build(); 
+
+        session.setAttribute("message", message);
         
 
 
         // user.setDOB(userForm.getDOB());
-
+ 
 
 
         return "redirect:/register"; 
