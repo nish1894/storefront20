@@ -21,7 +21,9 @@
         <form class="space-y-6"
          data-th-action="@{/do-register}"
           method="post"
-          data-th-object="${userForm}">
+          data-th-object="${userForm}"
+          novalidate>
+          
           <h5
             class="text-3xl font-medium text-center text-gray-900 dark:text-white"
           >
@@ -47,6 +49,17 @@
                 required
               />
             </div>
+
+            <!-- Error message for first name -->
+            <ul
+              data-th-if="${#fields.hasErrors('firstName')}"
+              class="text-red-500 px-1 py-1"
+            >
+              <li
+                data-th-each="err : ${#fields.errors('firstName')}"
+                data-th-text="${err}"
+              ></li>
+            </ul>
 
             <!-- Last Name -->
             <div class="w-1/2">

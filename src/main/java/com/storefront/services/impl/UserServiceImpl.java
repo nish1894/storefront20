@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
@@ -19,13 +20,17 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepo userRepo; 
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
 
 
     @Override
     public User saveUser(User user) {
         String userId = UUID.randomUUID().toString();
         user.setUserId(userId);
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         user.setName(user.getFirstName()+ " "+ user.getLastName());
 

@@ -1,6 +1,7 @@
 package com.storefront.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,6 +68,7 @@ public class PageController {
 
         //validate form 
         if(rBindingResult.hasErrors()){
+            System.out.println("loads of errors loads loads");
             return "register";
         }
 
@@ -79,20 +81,34 @@ public class PageController {
         user.setPassword(userForm.getPassword());
         user.setDOB(userForm.getDOB());
 
-        User savedUser = userService.saveUser(user);
-        System.out.println("user saved with ID: " + savedUser.getUserId());
+        // User savedUser = userService.saveUser(user);
+        // System.out.println("user saved with ID: " + savedUser.getUserId());
 
-        Message message =Message.builder().content("Registration successful").type(MessageType.Green).build(); 
+        // Message message =Message.builder().content("Registration successful").type(MessageType.Green).build(); 
 
-        session.setAttribute("message", message);
-        
+        // session.setAttribute("message", message);
+
+        try {
+            userService.saveUser(user);
+            Message message =Message.builder()
+                                .content("Registration successful")
+                                .type(MessageType.Green)
+                                .build(); 
+            
+            session.setAttribute("message", message);
+            return "redirect:/register"; 
+        } 
+        catch (DataIntegrityViolationException ex) {
+            Message message = Message.builder()
+                                 .content("Registration failed: Email already exists")
+                                 .type(MessageType.Red)
+                                 .build();
+            
+            session.setAttribute("message", message);
+            return "redirect:/register"; 
+         }
 
 
-        // user.setDOB(userForm.getDOB());
- 
-
-
-        return "redirect:/register"; 
     }
 }
  
