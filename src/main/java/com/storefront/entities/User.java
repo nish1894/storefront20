@@ -11,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -19,7 +20,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -43,8 +46,8 @@ public class User implements UserDetails{
 
     @Column(nullable = false)
     private String firstName;
-    @Column(nullable = false)
     private String lastName;
+    
     @Column(nullable = false)
     private String name;
 
@@ -56,15 +59,20 @@ public class User implements UserDetails{
     private String email;
     private String password;
 
-    @Column(nullable = false)
     private String phoneNumber;
 
-    private String emailVerified;
-    private String phoneVerified; 
+
+    @Builder.Default
+    private boolean enabled = true;
+
+    @Builder.Default
+    private boolean emailVerified = false;
+    @Builder.Default
+    private boolean phoneVerified = false;
 
     @Enumerated(value = EnumType.STRING)
     private Providers provider = Providers.SELF;
-    private String providerUserID;
+    private String providerUserId;
 
 
     @ElementCollection(fetch = FetchType.EAGER)
@@ -80,8 +88,16 @@ public class User implements UserDetails{
     @Override
     public String getUsername() {
         return this.email; 
-    } 
+    }
 
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private Cart cart; 
+
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Orders> orders = new ArrayList<>();
  
 //  @OneToOne
 //     @MapsId  // This makes userLogin's ID the same as this entity's ID

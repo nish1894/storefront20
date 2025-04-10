@@ -15,7 +15,12 @@ public interface UserService {
     boolean isUserExistByPhoneNumber(String phoneNumber);
     List<User> getAllUser();
 
-    User getUserByEmail(String email); 
+    User getUserByEmail(String email);
+    User getUserByUserId(String userId);
+
+    
+    
+    String getUserIdbyusername(String username); 
 
     
 

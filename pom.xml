@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.3</version>
+		<version>3.4.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.storefront</groupId>
-	<artifactId>storefront2.0</artifactId>
+	<groupId>com.scm</groupId>
+	<artifactId>scm2.0</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>storefront2.0</name>
-	<description>An online marketplace </description>
+	<name>scm2.0</name>
+	<description>Project for storing and  managing contacts on cloud </description>
 	<url/>
 	<licenses>
 		<license/>
@@ -27,15 +27,9 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>23</java.version>
+		<java.version>21</java.version>
 	</properties>
 	<dependencies>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -46,9 +40,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+			<version>3.4.3</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -65,6 +67,15 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		
+		<dependency>
+    		<groupId>com.cloudinary</groupId>
+    		<artifactId>cloudinary-http44</artifactId>
+    		<version>1.33.0</version>
+		</dependency>
+
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -72,12 +83,8 @@
 		</dependency>
 		<dependency>
     		<groupId>org.springframework.boot</groupId>
-   			<artifactId>spring-boot-starter-security</artifactId>
-   			<version>3.4.3</version>
-		</dependency>
-		<dependency>
-  			<groupId>org.springframework.boot</groupId>
-  			<artifactId>spring-boot-starter-validation</artifactId>
+   			 <artifactId>spring-boot-starter-oauth2-client</artifactId>
+   			 <version>3.4.3</version>
 		</dependency>
 	</dependencies>
 

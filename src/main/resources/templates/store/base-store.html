@@ -24,11 +24,23 @@
 
 <body class=" bg-gray-50 dark:bg-gray-900 dark:text-white">
 
-    <div data-th-replace="~{navbar :: navbar}"></div>
+    <!-- <user is logged in > -->
+    <div th:if="${loggedInUser}">
+        <div data-th-replace="~{loggedNavbar :: navbar}"></div>
+
+    </div>
+
+    <!-- <user is NOT logged in > -->
+    <div th:unless="${loggedInUser}">
+        <div data-th-replace="~{navbar :: navbar}"></div>  
+
+    </div>
+
+
     <div data-th-insert ="~{sidebar :: sidebar}"></div>
 
     <!-- <Main content> -->
-    <div class="p-4 ">
+    <div class="p-4 ms-70 mt-40 me-5">
         <section data-th-replace="${content}"></section>
     </div>
     <!-- <common footer> -->
@@ -40,6 +52,7 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.9/dist/sweetalert2.all.min.js"></script>
     <script data-th-src="@{'/js/script.js'}"></script>
+    <script data-th-src="@{'/js/cart.js'}"></script>
     <th:block data-th-replace="${script}"></th:block>
 </body>
 

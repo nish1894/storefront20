@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.OAuth2AuthorizationSuccessHandler;
 import org.springframework.security.web.SecurityFilterChain;
 
 import com.storefront.services.impl.SecurityCustomUserDetailService;
@@ -20,6 +21,9 @@ public class SecurityConfig {
 
     @Autowired
     private SecurityCustomUserDetailService userDetailsService;
+
+    @Autowired
+    private OAuthAuthenticationSuccessHandler handler;
 
     //configuration of authentication provider 
     @Bean
@@ -67,12 +71,12 @@ public class SecurityConfig {
             
         });
 
-        // //oauth config
+        //oauth config
 
-        // httpSecurity.oauth2Login(oauth ->{
-        //     oauth.loginPage("/login");
-        //     oauth.successHandler(handler);
-        // });
+        httpSecurity.oauth2Login(oauth ->{
+            oauth.loginPage("/login");
+            oauth.successHandler(handler);
+        });
 
         return httpSecurity.build();
     }

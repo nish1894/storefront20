@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  data-th-replace="~{store/base-store :: parent(~{::#content}, ~{::title}, ~{::script})}"
+>
+  <head>
+    <title>Home page</title>
+  </head>
+  <body>
+    
+    <div id="content" class="container">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div 
+        data-th-object = "${i}"
+        data-th-each="i : ${items}"
+        class="text-center"> 
+            <img
+                class="h-auto max-w-full rounded-lg"
+                data-th-src="@{*{image}}"
+                alt="Product Image"
+            />
+            <p class="mt-2 text-lg font-semibold text-gray-900 dark:text-white" 
+            data-th-text="*{title}"
+          ></p>
+            <p class="text-md text-gray-600 dark:text-gray-400"
+            data-th-text="'$' + *{price}"
+            ></p>
+            <!-- Add to Cart Form -->
+            <form class="add-to-cart-form" >
+              <div class="flex items-center mb-2">
+                  <input type="number" name="quantity" value="1" min="1" max="99" 
+                        class="w-16 p-1 text-sm border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600">
+                  <button type="submit" class="ml-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                      Add to Cart
+                  </button>
+              </div>
+            </form>
+        </div>
+        
+      </div>
+      
+     
+          
+       
+
+      <script>
+        console.log("Contact page");
+      </script>
+    </div>
+  </body>
+</html>

@@ -52,10 +52,10 @@ public class UserServiceImpl implements UserService{
         user2.setPhoneNumber(user.getPhoneNumber());
         user2.setDOB(user.getDOB());
         user2.setPassword(user.getPassword());
-        user2.setEmailVerified(user.getEmailVerified());
-        user2.setPhoneVerified(user.getPhoneVerified());
+        user2.setEmailVerified(user.isEmailVerified());
+        user2.setPhoneVerified(user.isPhoneVerified());
         user2.setProvider(user.getProvider());
-        user2.setProviderUserID(user.getProviderUserID());
+        user2.setProviderUserId(user.getProviderUserId());
 
         user2.setName(user.getFirstName()+ " "+ user.getLastName());
 
@@ -91,6 +91,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public User getUserByEmail(String email) {
        return  userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("user not found"));
+    }
+
+    @Override
+    public String getUserIdbyusername(String username) {
+        User user = userRepo.findById(username).orElseThrow(() -> new ResourceNotFoundException("user not found"));
+        return user.getUserId(); 
+    }
+
+    @Override
+    public User getUserByUserId(String userId) {
+        return  userRepo.findByUserId(userId).orElseThrow(() -> new ResourceNotFoundException("user not found"));
     }
 
 }

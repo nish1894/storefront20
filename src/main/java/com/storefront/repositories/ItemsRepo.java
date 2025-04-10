@@ -17,8 +17,12 @@ public interface ItemsRepo extends JpaRepository<Items, String> {
 
     Page<Items> findByCategory(Categories category, Pageable pageable);
 
-    
+    Page<Items> findByTitleContaining( String namekeyword, Pageable pageable);
 
+
+
+
+    
     
 
 }
