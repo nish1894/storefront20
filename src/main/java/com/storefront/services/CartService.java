@@ -3,6 +3,7 @@ package com.storefront.services;
 import java.util.Optional;
 
 import com.storefront.entities.Cart;
+import com.storefront.helpers.SessionCart;
 
 public interface CartService {
 
@@ -29,4 +30,9 @@ public interface CartService {
 
     // // Update cart items
     // void updateCartItemPrice(CartItems cartItem);
+
+
+    // session cart 
+    SessionCart initializeSessionCart(SessionCart cart);
+
 }

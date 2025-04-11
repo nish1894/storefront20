@@ -2,143 +2,181 @@ package com.storefront.helpers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.WebApplicationContext;
 
 import com.storefront.entities.Cart;
 import com.storefront.entities.CartItems;
-import com.storefront. entities.User;
+import com.storefront.entities.Items;
+import com.storefront.entities.User;
+import com.storefront.services.ItemsService;
 
+import lombok.Getter;
 
+@Component
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class SessionCart implements Serializable {
     private static final long serialVersionUID = 1L;
     
+    @Autowired
+    private ItemsService itemsService;
+    
     private String cartId;
+    private Cart cart;
+    @Getter
+    private List<CartItems> cartItems = new ArrayList<>();
     
     public SessionCart() {
         this.cartId = UUID.randomUUID().toString();
+        this.cart = new Cart(); // Create new Cart entity
+        this.cart.setCartItems(new ArrayList<>());
     }
     
     public String getCartId() {
         return cartId;
     }
     
+    public Cart getCart() {
+        return cart;
+    }
+    
+    public void setCart(Cart cart) {
+        this.cart = cart;
+        if (cart.getCartItems() != null) {
+            this.cartItems = cart.getCartItems();
+        }
+    }
+    
+    public void addItem(String itemId) {
+        // Check if the item already exists in the cart
+        for (CartItems cartItem : cartItems) {
+            if (cartItem.getItems().getItemId().equals(itemId)) {
+                // Item already exists, update quantity
+                cartItem.setQuantity(cartItem.getQuantity() + 1);
+                return;
+            }
+        }
+        
+        // Add the item to the cart entity
+        Items item = itemsService.getById(itemId);
+        if (item != null) {
+            CartItems cartItem = new CartItems();
+            cartItem.setCartItemId(UUID.randomUUID().toString());
+            cartItem.setCart(cart);   
+            cartItem.setQuantity(1);
+            cartItem.setItems(item);
+            
+            // Add to both lists to keep them in sync
+            cartItems.add(cartItem);
+            cart.getCartItems().add(cartItem);
+            
+            System.out.println("Item added to cart: " + cartItem.getItems().getItemId());
+        } else {
+            System.out.println("Item not found: " + itemId);
+        }
+    }
+    
+    public void removeItem(String itemId) {
+        CartItems itemToRemove = null;
+        for (CartItems cartItem : cartItems) {
+            if (cartItem.getItems().getItemId().equals(itemId)) {
+                itemToRemove = cartItem;
+                break;
+            }
+        }
+        
+        if (itemToRemove != null) {
+            cartItems.remove(itemToRemove);
+            cart.getCartItems().remove(itemToRemove);
+            System.out.println("Item removed from cart: " + itemId);
+        }
+    }
+    
+    public void updateItemQuantity(String itemId, int quantity) {
+        for (CartItems cartItem : cartItems) {
+            if (cartItem.getItems().getItemId().equals(itemId)) {
+                cartItem.setQuantity(quantity);
+                System.out.println("Updated quantity for item " + itemId + " to " + quantity);
+                return;
+            }
+        }
+    }
+    
+    public int getItemCount() {
+        return cartItems.size();
+    }
+    
+    public int getTotalItems() {
+        int total = 0;
+        for (CartItems item : cartItems) {
+            total += item.getQuantity();
+        }
+        return total;
+    }
+    
     @Override
     public String toString() {
-        return "SessionCart{cartId='" + cartId + "'}";
+        return "SessionCart{cartId='" + cartId + "', itemCount=" + getItemCount() + "}";
     }
+
+
+    // retrun all cart items 
+    public List<CartItems> getAllCartItems() {
+        for (CartItems cartItem : cartItems) {
+            System.out.println("Item ID: " + cartItem.getItems().getItemId()+ "  Quantity: " + cartItem.getQuantity());
+        }
+
+        return cartItems;
+    }
+
+    public Map<String, Integer>  printCartItemsSummary() {
+        Map<String, Integer> myMap = new HashMap<>();
+
+        for (CartItems cartItem : cartItems) {
+            String a1 = cartItem.getItems().getItemId();
+            int b1 = cartItem.getQuantity();
+            myMap.put(a1, b1);
+        }
+
+        for (Map.Entry<String, Integer> entry : myMap.entrySet()) {
+            System.out.println("itemId: " + entry.getKey() + ", Quantity: " + entry.getValue());
+        }
+        return myMap; 
+    }
+
+    
+    
 }
 
-// public class SessionCart {
-//     // private List<CartItems> cartItems = new ArrayList<>();
+// public class SessionCart implements Serializable {
+//     private static final long serialVersionUID = 1L;
     
-
-//     private Cart cart;
-
+//     private String cartId;
+    
+    
 //     public SessionCart() {
-//         this.cart = new Cart();
-//         cart.setCartId(UUID.randomUUID().toString());
-//         cart.setUpdatedOn(java.time.LocalDateTime.now());
-//         cart.setItemCount(0);
-//         cart.setTotalPrice(0);
-//         cart.setCartItems(new ArrayList<>());
-//         cart.setUser(new User());
+//         this.cartId = UUID.randomUUID().toString();
 //     }
-
-//     public Cart cart() {
-//         return this.cart;
-//     }
-
-//     public String getCartId() {
-//         return this.cart().getCartId();
-//     }
-
- 
-
-
-  
-
-//     // public List<CartItems> getItems() {
-//     //     return cartItems;
-//     // }
-
-//     // public void addItem(CartItems item) {
-//     //     this.cartItems.add(item);
-
-//     //     // Check if the item already exists in the cart
-//     //     boolean itemExists = false;
-//     //     for (CartItems cartItem : cartItems) {
-//     //         if (cartItem.getItems().getItemId().equals(item.getItems().getItemId())) {
-//     //             itemExists = true;
-//     //             break;
-//     //         }
-//     //     }
-//     //     // If the item already exists, update its quantity and total price
-
-      
-//     //     if (itemExists) {
-//     //         for (CartItems cartItem : cartItems) {
-//     //             if (cartItem.getItems() == null) {
-//     //                 throw new IllegalArgumentException("CartItem must have an associated Item before adding to cart.");
-//     //             }
-        
-//     //             if (cartItem.getItems().getItemId().equals(item.getItems().getItemId())) {
-//     //                 cartItem.setQuantity(cartItem.getQuantity() + 1);
-//     //                 cartItem.setTotalPrice(cartItem.getQuantity() * cartItem.getPrice());
-
-//     //             }
-//     //         }
-//     //     } else {
-//     //     // If the item does not exist, add it to the cart
-//     //     item.setQuantity(1); // Set initial quantity to 1
-//     //     item.setTotalPrice(item.getQuantity() * item.getPrice());
-//     //     cartItems.add(item);
-//     //     }
-
-//     //     // update the quantity of the item in the cart
-//     //     cart.setItemCount(cart.getItemCount() + 1);
-//     //     // update the total price of the item in the cart
-//     //     cart.setTotalPrice(cart.getTotalPrice() + item.getPrice()); 
-
-
-//     //     // update the updatedOn field of the cart
-//     //     cart.setUpdatedOn(java.time.LocalDateTime.now());
-
-//     //     //update the inventoru in itmems  
-        
-//     // }
-
-//     // public void removeItem(CartItems item) {
-//     //    // Check if the item already exists in the cart
-//     //    boolean itemExists = false;
-//     //    for (CartItems cartItem : cartItems) {
-//     //        if (cartItem.getItems().getItemId().equals(item.getItems().getItemId())) {
-//     //            itemExists = true;
-//     //            break;
-//     //        }
-//     //    }
-//     //    // If the item already exists, update its quantity and total price
-//     //    if (itemExists) {
-//     //        for (CartItems cartItem : cartItems) {
-//     //            if (cartItem.getItems().getItemId().equals(item.getItems().getItemId())) {
-//     //                cartItem.setQuantity(cartItem.getQuantity() + 1);
-//     //                cartItem.setTotalPrice(cartItem.getQuantity() * cartItem.getPrice());
-
-//     //            }
-//     //        }
-//     //    } else {
-//     //    // If the item does not exist, add it to the cart
-//     //    throw new ResourceNotFoundException("Item not found in the cart  ");
-       
-//     //    }
-//     //    // Update the total price of the cart
-//     //    float totalPrice = 0;
-//     //    for (CartItems cartItem : cartItems) {
-//     //        totalPrice += cartItem.getTotalPrice();
-//     //    }
-//     //    cart.setTotalPrice(totalPrice);    
-//     // }
-
     
-// }
+//     public String getCartId() {
+//         return cartId;
+//     }
+    
+//     @Override
+//     public String toString() {
+//         return "SessionCart{cartId='" + cartId + "'}";
+//     }
 
+
+//     private List<CartItems> cartItems = new ArrayList<>();
+
+
+// }

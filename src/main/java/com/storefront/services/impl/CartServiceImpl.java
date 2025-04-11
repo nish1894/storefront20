@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.storefront.entities.Cart;
 import com.storefront.entities.User;
 import com.storefront.helpers.ResourceNotFoundException;
+import com.storefront.helpers.SessionCart;
 import com.storefront.repositories.CartRepo;
 import com.storefront.services.CartService;
 import com.storefront.services.UserService;
@@ -62,6 +63,22 @@ public class CartServiceImpl implements CartService {
     public Cart addCart(String userId) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'addCart'");
+    }
+
+
+    @Override
+    public SessionCart initializeSessionCart(SessionCart cart) {
+        // Check if the cart is already initialized
+            // Create a new cart
+            // cart = new Cart();
+            // cart.setCartId(UUID.randomUUID().toString());
+            // cart.setUpdatedOn(LocalDateTime.now());
+            // cart.setItemCount(0);
+            // cart.setTotalPrice(0.0f);
+            // cart.setCartItems(new ArrayList<>());
+        
+            throw new UnsupportedOperationException("Unimplemented method 'addCart'");
+
     }
     
     

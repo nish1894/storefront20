@@ -11,4 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ItemRequest {
      private String itemId;
+     private String action;
 }

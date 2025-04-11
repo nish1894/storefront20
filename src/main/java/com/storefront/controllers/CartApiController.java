@@ -1,103 +1,101 @@
 package com.storefront.controllers;
 
-import java.security.Principal;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.storefront.dto.ItemRequest;
-import com.storefront.entities.CartItems;
-import com.storefront.entities.Items;
-import com.storefront.entities.User;
-import com.storefront.helpers.Helper;
 import com.storefront.helpers.SessionCart;
-import com.storefront.services.CartItemsService;
-import com.storefront.services.UserService;
-
+import com.storefront.services.CartService;
 import jakarta.servlet.http.HttpSession;
-
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/cart")
 public class CartApiController {
 
+    @Autowired
+    private CartService cartService;
+    
+    @Autowired
+    private SessionCart sessionCart; // Let Spring inject the managed bean
+
     @PostMapping("/update")
-    public ResponseEntity<?> addToCart(HttpSession session) {
+    public ResponseEntity<?> addToCart(@RequestBody ItemRequest item, HttpSession session) {
         System.out.println("Processing Cart");
-   
-        // Try to get the cart from session
-        SessionCart cart = (SessionCart) session.getAttribute("cart");
+        System.out.println("➡️ Item ID: " + item.getItemId());
+        System.out.println("➡️ action: " + item.getAction());
 
-        if (cart != null) {
-            System.out.println("Cart from session: " + cart.getCartId());
-        } else {
-            System.out.println("No cart found in session, creating a new one.");
-            cart = new SessionCart();
-            System.out.println("New cart created with ID: " + cart.getCartId());
-            session.setAttribute("cart", cart);
+        // No need to get cart from session or create it manually
+        // Spring will inject and manage the session-scoped bean for us
+
+        if (item.getAction().equals("add")) {
+            sessionCart.addItem(item.getItemId());
         }
+        // } else if (item.getAction().equals("remove")) {
+        //     sessionCart.removeItem(item.getItemId());
+        // } else if (item.getAction().equals("update") && item.getQuantity() != null) {
+        //     sessionCart.updateItemQuantity(item.getItemId(), item.getQuantity());
+        // }
 
-        return ResponseEntity.ok("Cart processed");
+        sessionCart.printCartItemsSummary(); 
+        
+
+        return ResponseEntity.ok(Map.of(
+            "cartId", sessionCart.getCartId(),
+            "itemCount", sessionCart.getItemCount()
+        ));
+    }
+    
+
+    // Optional method to get cart contents
+    @GetMapping
+    public ResponseEntity<?> getCartContents() {
+        return ResponseEntity.ok(sessionCart.getCart());
     }
 }
+
 
 // @RestController
 // @RequestMapping("/api/cart")
 // public class CartApiController {
 
 //     @Autowired
-//     private CartItemsService cartItemsService;
-
-//     @Autowired
-//     private UserService userService;
+//     CartService cartService;
 
 //     @PostMapping("/update")
-//     public ResponseEntity<?> addToCart(@RequestBody String itemId, String action, HttpSession session) {
-        
+//     public ResponseEntity<?> addToCart(@RequestBody ItemRequest item,HttpSession session) {
 //         System.out.println("Processing Cart");
-
-//         if (itemId != null) {
-//         System.out.println("🧾 Received Item:");
-//         System.out.println("➡️ Item ID: " + itemId);
-//         } else {
-//             System.out.println("❌ Item ID is null");
-//         }
-//         // System.out.println("➡️ Price: " + newItem.getPrice());
    
+//         System.out.println("➡️ Item ID: " + item.getItemId());
+//         System.out.println("➡️ action: " + item.getAction());
+
+//         // Try to get the cart from session
+//         SessionCart cart = (SessionCart) session.getAttribute("cart");
+
         
-//     // Try to get the cart from session
-//     SessionCart cart = (SessionCart) session.getAttribute("cart");
 
-//     if (cart != null) {
-//         System.out.println("Cart from session: " + cart.getCartId());
-//     } else {
-//         System.out.println("No cart found in session, creating a new one.");
+//         if (cart != null) {
+//             System.out.println("Cart from session: " + cart.getCartId());
+//         } else {
+//             System.out.println("No cart found in session, creating a new one.");
+//             cart = new SessionCart();
+
+//             System.out.println("New cart created with ID: " + cart.getCartId());
+//             session.setAttribute("cart", cart);
+//         }
+
+//         if(item.getAction().equals("add") ){
+//             cart.addItem( item.getItemId());
+//         }
+
+//         System.out.println("➡️ cartItem: " + item.getAction());
+
+
+
+
+
+//         return ResponseEntity.ok("Cart processed");
 //     }
-
-//     System.out.println("Cart from session: " + cart);
-
-
-//     // If no cart exists, create one and store it
-//     if (cart == null) {
-//         cart = new SessionCart();
-//     }
-
-//     System.out.println("Cart from session: " + cart);
-
-//     // // Add the new item
-//     // cart.addItem(newItem);
-
-//     // Save back to session
-//     session.setAttribute("cart", cart);
-
-//     return ResponseEntity.ok("Item added to cart");
-// }
-
 // }
 
