@@ -28,6 +28,8 @@ public class SessionCart implements Serializable {
     
     @Autowired
     private ItemsService itemsService;
+
+    
     
     private String cartId;
     private Cart cart;
@@ -110,7 +112,9 @@ public class SessionCart implements Serializable {
         }
     }
     
+    // number of items in cart 
     public int getItemCount() {
+        System.out.println("Item count: " + cartItems.size());
         return cartItems.size();
     }
     
@@ -137,6 +141,19 @@ public class SessionCart implements Serializable {
         return cartItems;
     }
 
+    public List<Items> getAllItemsOfCart() {
+        // for (CartItems cartItem : cartItems) {
+        //     System.out.println("Item ID: " + cartItem.getItems().getItemId()+ "  Quantity: " + cartItem.getQuantity());
+        // }
+        List<Items>ItemsOfCart = new ArrayList<>();
+        for (CartItems cartItem : cartItems) {
+            Items item = cartItem.getItems();
+            ItemsOfCart.add(item);
+        }
+
+        return ItemsOfCart;
+    }
+
     public Map<String, Integer>  printCartItemsSummary() {
         Map<String, Integer> myMap = new HashMap<>();
 
@@ -151,6 +168,26 @@ public class SessionCart implements Serializable {
         }
         return myMap; 
     }
+
+    public int getTotalPrice() {
+        int total = 0;
+        for (CartItems item : cartItems) {
+            total += item.getItems().getPrice() * item.getQuantity();
+        }
+        return total;
+    }
+    public void clearCart() {
+        cartItems.clear();
+        cart.getCartItems().clear();
+        System.out.println("Cart cleared");
+    }
+    public void setUser(User user) {
+        cart.setUser(user);
+    }
+    public User getUser() {
+        return cart.getUser();
+    }
+
 
     
     
