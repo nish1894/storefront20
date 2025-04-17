@@ -13,6 +13,7 @@ import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.storefront.entities.Cart;
 import com.storefront.entities.CartItems;
 import com.storefront.entities.Items;
@@ -141,10 +142,10 @@ public class SessionCart implements Serializable {
         return cartItems;
     }
 
+    @JsonIgnore
     public List<Items> getAllItemsOfCart() {
-        // for (CartItems cartItem : cartItems) {
-        //     System.out.println("Item ID: " + cartItem.getItems().getItemId()+ "  Quantity: " + cartItem.getQuantity());
-        // }
+      
+        
         List<Items>ItemsOfCart = new ArrayList<>();
         for (CartItems cartItem : cartItems) {
             Items item = cartItem.getItems();
