@@ -16,6 +16,7 @@ import com.storefront.entities.User;
 import com.storefront.helpers.CookieManager;
 import com.storefront.helpers.Helper;
 import com.storefront.helpers.SessionCart;
+import com.storefront.services.SessionCartService;
 import com.storefront.services.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,27 +32,30 @@ public class CartRootController {
     private SessionCart sessionCart;
 
     @Autowired
+    private SessionCartService sessionCartService;
+
+    @Autowired
     private CookieManager cookieManager;
 
     @ModelAttribute
     public void CurrentCartInformation(Model model, Authentication authentication, HttpServletRequest request) {
         // Guest user - load cart from cookies
         if (authentication == null) {
-            if (sessionCart.getItemCount() == 0) {
+            if (sessionCartService.getItemCount(sessionCart) == 0) {
                 Map<String, Integer> savedCart = cookieManager.loadCartFromCookie(request);
                 for (Map.Entry<String, Integer> entry : savedCart.entrySet()) {
                     // Add items from cookie to session cart
-                    sessionCart.addItem(entry.getKey());
+                    sessionCartService.addItem(sessionCart,entry.getKey());
                     if (entry.getValue() > 1) {
-                        sessionCart.updateItemQuantity(entry.getKey(), entry.getValue());
+                        sessionCartService.updateItemQuantity(sessionCart,entry.getKey(), entry.getValue());
                     }
                 }
             }
             
             // Add cart information to the model for all views
-            model.addAttribute("cartItemCount", sessionCart.getItemCount());
-            model.addAttribute("cartTotalItems", sessionCart.getTotalItems());
-            model.addAttribute("cartTotalPrice", sessionCart.getTotalPrice());
+            model.addAttribute("cartItemCount", sessionCartService.getItemCount(sessionCart));
+            model.addAttribute("cartTotalItems", sessionCartService.getTotalItems(sessionCart));
+            model.addAttribute("cartTotalPrice", sessionCartService.getTotalPrice(sessionCart));
             return;
         }
         

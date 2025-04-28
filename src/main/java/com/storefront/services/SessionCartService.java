@@ -25,14 +25,16 @@ public interface SessionCartService {
     void setCart(SessionCart sessionCart, Cart cart);
     void addItem(SessionCart sessionCart, String itemId);
     void removeItem(SessionCart sessionCart, String itemId);
-    // void updateItemQuantity(SessionCart sessionCart, String itemId, int quantity);
+    void updateItemQuantity(SessionCart sessionCart, String itemId, int quantity);
     int getItemCount(SessionCart sessionCart);
     int getTotalItems(SessionCart sessionCart);
     List<CartItems> getAllCartItems(SessionCart sessionCart);
     List<Items> getAllItemsOfCart(SessionCart sessionCart);
     void clearCart(SessionCart sessionCart);
     Map<String, Integer> printCartItemsSummary(SessionCart sessionCart);
-    // void setUser(SessionCart sessionCart, User user);
-    // User getUser(SessionCart sessionCart);
+    void setUser(SessionCart sessionCart, User user);
+    User getUser(SessionCart sessionCart);
+
+    int getTotalPrice(SessionCart sessionCart);
 
 }

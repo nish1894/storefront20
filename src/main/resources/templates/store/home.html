@@ -19,7 +19,7 @@
             class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800"
           > 
             <div class="h-56 w-full">
-              <a href="#">
+              <a th:href="@{/store/product/{id}(id=*{itemId})}">
                 <img 
                 class="h-full w-full object-contain rounded-lg"
                 data-th-src="@{*{image}}"

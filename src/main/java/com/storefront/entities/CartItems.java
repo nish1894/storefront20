@@ -2,7 +2,7 @@ package com.storefront.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 
@@ -11,10 +11,11 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class CartItems {
 
     @Id
-    private String cartItemId; // You can generate this as cartId_itemId or use UUID
+    private String cartItemId; 
 
     private Integer quantity;
     private float price;
@@ -23,10 +24,12 @@ public class CartItems {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_id")
+    @JsonIgnoreProperties("cartItems") // Prevent circular reference with Cart
     private Cart cart;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "item_id")
+    @JsonIgnoreProperties("cartItems") // Prevent circular reference with Items
     private Items items;
 
     // Getters and setters...
@@ -37,4 +40,16 @@ public class CartItems {
     //         this.id = cart.getId() + "_" + items.getItemId();
     //     }
     // }
+
+    @Override
+    public String toString() {
+    return "CartItems{" +
+           "cartItemId='" + cartItemId + '\'' +
+           ", quantity=" + quantity +
+           ", price=" + price +
+           ", totalPrice=" + totalPrice +
+           ", updatedOn='" + updatedOn + '\'' +
+           ", itemId=" + (items != null ? items.getItemId() : null) +
+           '}';
+}
 }

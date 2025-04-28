@@ -1,6 +1,7 @@
 package com.storefront.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.jms.JmsProperties.Listener.Session;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.core.Authentication;
@@ -9,6 +10,7 @@ import com.storefront.dto.ItemRequest;
 import com.storefront.helpers.CookieManager;
 import com.storefront.helpers.SessionCart;
 import com.storefront.services.CartService;
+import com.storefront.services.SessionCartService;
 import com.storefront.services.UserService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +38,9 @@ public class CartApiController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private SessionCartService sessionCartService;
+
     @PostMapping("/update")
     public ResponseEntity<?> updateCart(
             @RequestBody ItemRequest item, 
@@ -47,16 +52,17 @@ public class CartApiController {
         
         // Process the current action
         if (item.getAction().equals("add")) {
-            sessionCart.addItem(item.getItemId());
+            sessionCartService.addItem(sessionCart, item.getItemId());
+            logger.info("Added item to cart: {}", item.getItemId());
         } else if (item.getAction().equals("remove")) {
-            sessionCart.removeItem(item.getItemId());
+            sessionCartService.removeItem(sessionCart,item.getItemId());
         // } else if (item.getAction().equals("update") && item.getQuantity() != null) {
-        //     sessionCart.updateItemQuantity(item.getItemId(), item.getQuantity());
+        //     sessionCartService.updateItemQuantity(item.getItemId(), item.getQuantity());
         } else if (item.getAction().equals("clear")) {
-            sessionCart.clearCart();
+            sessionCartService.clearCart(sessionCart);
             cookieManager.deleteCookie(response);
             return ResponseEntity.ok(Map.of(
-                "cartId", sessionCart.getCartId(),
+                "cartId", sessionCartService.getCartId(sessionCart),
                 "itemCount", 0,
                 "totalItems", 0,
                 "totalPrice", 0.0
@@ -64,7 +70,7 @@ public class CartApiController {
         }
 
         // Save current cart state after modification
-        Map<String, Integer> cartSummary = sessionCart.printCartItemsSummary();
+        Map<String, Integer> cartSummary = sessionCartService.printCartItemsSummary(sessionCart);
         
         // For guest users, save to cookie
         if (authentication == null) {
@@ -78,10 +84,10 @@ public class CartApiController {
         // }
 
         return ResponseEntity.ok(Map.of(
-            "cartId", sessionCart.getCartId(),
-            "itemCount", sessionCart.getItemCount(),
-            "totalItems", sessionCart.getTotalItems(),
-            "totalPrice", sessionCart.getTotalPrice()
+            "cartId", sessionCartService.getCartId(sessionCart),
+            "itemCount", sessionCartService.getItemCount(sessionCart),
+            "totalItems", sessionCartService.getTotalItems(sessionCart),
+            "totalPrice", sessionCartService.getTotalPrice(sessionCart)
         ));
     }
     
@@ -90,14 +96,14 @@ public class CartApiController {
         // No need to load cart data here as it's handled by CartRootController
         // Just return current cart state
         return ResponseEntity.ok(Map.of(
-            "cartId", sessionCart.getCartId(),
-            "items", sessionCart.getAllCartItems(),
-            "itemCount", sessionCart.getItemCount(),
-            "totalItems", sessionCart.getTotalItems(),
-            "totalPrice", sessionCart.getTotalPrice()
+            "cartId", sessionCartService.getCartId(sessionCart),
+            "items", sessionCartService.getAllCartItems(sessionCart),
+            "itemCount", sessionCartService.getItemCount(sessionCart),
+            "totalItems", sessionCartService.getTotalItems(sessionCart),
+            "totalPrice", sessionCartService.getTotalPrice(sessionCart)
         ));
     }
-    
+
 }
 
 // package com.storefront.controllers;

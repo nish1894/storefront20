@@ -18,11 +18,16 @@ import com.storefront.helpers.SessionCart;
 import com.storefront.services.ItemsService;
 import com.storefront.services.SessionCartService;
 
+import lombok.Getter;
+
 @Service
 public class SessionCartServiceImpl implements SessionCartService {
 
     @Autowired
     private ItemsService itemsService;
+
+    @Getter
+    private List<CartItems> cartItems = new ArrayList<>();
 
     @Override
     public String getCartId(SessionCart sessionCart) {
@@ -41,6 +46,8 @@ public class SessionCartServiceImpl implements SessionCartService {
 
     @Override
     public void addItem(SessionCart sessionCart, String itemId) {
+        System.out.println("Adding item to cart: " + itemId); // Add logging
+
         Cart cart = sessionCart.getCart();
         List<CartItems> cartItems = cart.getCartItems();
         // check existing
@@ -59,7 +66,6 @@ public class SessionCartServiceImpl implements SessionCartService {
             newCi.setQuantity(1);
             newCi.setItems(item);
             cartItems.add(newCi);
-            cart.getCartItems().add(newCi);
         }
     }
 
@@ -96,7 +102,13 @@ public class SessionCartServiceImpl implements SessionCartService {
 
     @Override
     public List<CartItems> getAllCartItems(SessionCart sessionCart) {
-        return new ArrayList<>(sessionCart.getCart().getCartItems());
+        List<CartItems> items = sessionCart.getCart().getCartItems();
+        // Update total price for each item before returning
+        items.forEach(item -> {
+            item.setTotalPrice(item.getItems().getPrice() * item.getQuantity());
+            item.setPrice(item.getItems().getPrice());
+        });
+        return new ArrayList<>(items);
     }
 
     @Override
@@ -107,6 +119,10 @@ public class SessionCartServiceImpl implements SessionCartService {
         }
         return itemsList;
     }
+
+    
+
+    
 
     @Override
     public void clearCart(SessionCart sessionCart) {
@@ -138,4 +154,24 @@ public class SessionCartServiceImpl implements SessionCartService {
     public User getUser(SessionCart sessionCart) {
         return sessionCart.getCart().getUser();
     }
+
+    @Override
+    public void updateItemQuantity(SessionCart sessionCart,String itemId, int quantity) {
+        for (CartItems cartItem : cartItems) {
+            if (cartItem.getItems().getItemId().equals(itemId)) {
+                cartItem.setQuantity(quantity);
+                System.out.println("Updated quantity for item " + itemId + " to " + quantity);
+                return;
+            }
+        }
+    }
+
+    // @Override
+    // public int getTotalPrice(SessionCart sessionCart) {
+    //     int total = 0;
+    //     for (CartItems item : cartItems) {
+    //         total += item.getItems().getPrice() * item.getQuantity();
+    //     }
+    //     return total;
+    // }
 }
