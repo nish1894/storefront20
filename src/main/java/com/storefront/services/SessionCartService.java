@@ -24,6 +24,8 @@ public interface SessionCartService {
     
     void setCart(SessionCart sessionCart, Cart cart);
     void addItem(SessionCart sessionCart, String itemId);
+    void subtractItem(SessionCart sessionCart, String itemId);
+
     void removeItem(SessionCart sessionCart, String itemId);
     void updateItemQuantity(SessionCart sessionCart, String itemId, int quantity);
     int getItemCount(SessionCart sessionCart);

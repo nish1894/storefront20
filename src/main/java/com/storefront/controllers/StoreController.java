@@ -111,5 +111,13 @@ public class StoreController {
         return "store/product";
     }
 
+    @RequestMapping("/checkout")
+    public String checkout(Model model) {
+        // // Get cart total price
+        // double cartTotalPrice = sessionCartService.getTotalPrice(sessionCart);
+        // model.addAttribute("cartTotalPrice", cartTotalPrice);
+        
+        return "store/checkout";
+    }
 
 }

@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.text.DecimalFormat;
 
 @RestController
 @RequestMapping("/api/cart")
@@ -54,11 +55,11 @@ public class CartApiController {
         if (item.getAction().equals("add")) {
             sessionCartService.addItem(sessionCart, item.getItemId());
             logger.info("Added item to cart: {}", item.getItemId());
+        } else if (item.getAction().equals("sub")) {
+            sessionCartService.subtractItem(sessionCart,item.getItemId());
         } else if (item.getAction().equals("remove")) {
             sessionCartService.removeItem(sessionCart,item.getItemId());
 
-        // } else if (item.getAction().equals("update") && item.getQuantity() != null) {
-        //     sessionCartService.updateItemQuantity(item.getItemId(), item.getQuantity());
         } else if (item.getAction().equals("clear")) {
             sessionCartService.clearCart(sessionCart);
             cookieManager.deleteCookie(response);
@@ -84,11 +85,22 @@ public class CartApiController {
         //     logger.info("Saved cart to database for user: {}", username);
         // }
 
+        // Calculate all values server-side
+        float totalPrice = sessionCartService.getTotalPrice(sessionCart);
+        DecimalFormat df = new DecimalFormat("0.00");
+        float originalPrice = Float.parseFloat(df.format(1.30f * totalPrice));
+        float savings = Float.parseFloat(df.format(0.46f * totalPrice));
+        float tax = Float.parseFloat(df.format(0.53f * totalPrice));
+
         return ResponseEntity.ok(Map.of(
             "cartId", sessionCartService.getCartId(sessionCart),
+            "items", sessionCartService.getAllCartItems(sessionCart),
             "itemCount", sessionCartService.getItemCount(sessionCart),
             "totalItems", sessionCartService.getTotalItems(sessionCart),
-            "totalPrice", sessionCartService.getTotalPrice(sessionCart)
+            "totalPrice", totalPrice,
+            "originalPrice", originalPrice,
+            "savings", savings,
+            "tax", tax
         ));
     }
     

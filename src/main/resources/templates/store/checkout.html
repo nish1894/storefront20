@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  th:replace="~{base :: parent(~{::#content},~{::title}, ~{::script})}"
+>
+  <head>
+    <title>Checkout</title>
+  </head>
+  <body>
+    <div id="content">
+      <div class="min-h-screen bg-gray-50 py-12 dark:bg-gray-900">
+        <div class="mx-auto max-w-lg px-4">
+          <!-- Order Summary Card -->
+          <div class="mb-8 rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+              Order Summary
+            </h2>
+            <div class="mt-4 flex justify-between">
+              <span class="text-gray-600 dark:text-gray-400">Total Amount</span>
+              <span
+                class="text-xl font-bold text-gray-900 dark:text-white"
+                th:text="'$' + ${cartTotalPrice}"
+                >$0.00</span
+              >
+            </div>
+          </div>
+
+          <!-- Payment Form -->
+          <div class="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
+            <form id="payment-form" class="space-y-6">
+              <!-- Card Information -->
+              <div>
+                <label
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Card Information
+                </label>
+                <input
+                  type="text"
+                  id="card-number"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
+                  placeholder="1234 1234 1234 1234"
+                  maxlength="16"
+                  required
+                />
+              </div>
+
+              <!-- Expiry and CVV -->
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Expiry Date
+                  </label>
+                  <input
+                    type="text"
+                    id="expiry"
+                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
+                    placeholder="MM/YY"
+                    maxlength="5"
+                    required
+                  />
+                </div>
+                <div>
+                  <label
+                    class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    CVV
+                  </label>
+                  <input
+                    type="text"
+                    id="cvv"
+                    class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
+                    placeholder="123"
+                    maxlength="3"
+                    required
+                  />
+                </div>
+              </div>
+
+              <!-- Name on Card -->
+              <div>
+                <label
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Name on Card
+                </label>
+                <input
+                  type="text"
+                  id="card-name"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder:text-gray-400"
+                  placeholder="John Doe"
+                  required
+                />
+              </div>
+
+              <!-- Pay Button -->
+              <button
+                type="submit"
+                class="w-full rounded-lg bg-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Pay Now
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById("payment-form");
+
+        form.addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          // Show loading state
+          const button = form.querySelector("button");
+          const originalText = button.innerText;
+          button.disabled = true;
+          button.innerHTML = `
+            <svg class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+          `;
+
+          // Simulate payment processing
+          setTimeout(() => {
+            // Show success message using SweetAlert2
+            Swal.fire({
+              title: "Payment Successful!",
+              text: "Your order has been processed successfully.",
+              icon: "success",
+              confirmButtonText: "Continue Shopping",
+              confirmButtonColor: "#3B82F6",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                window.location.href = "/store/home";
+              }
+            });
+
+            // Reset button state
+            button.disabled = false;
+            button.innerText = originalText;
+          }, 2000);
+        });
+
+        // Format card number input
+        const cardInput = document.getElementById("card-number");
+        cardInput.addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+          e.target.value = value;
+        });
+
+        // Format expiry date input
+        const expiryInput = document.getElementById("expiry");
+        expiryInput.addEventListener("input", function (e) {
+          let value = e.target.value.replace(/\D/g, "");
+          if (value.length > 2) {
+            value = value.slice(0, 2) + "/" + value.slice(2);
+          }
+          e.target.value = value;
+        });
+
+        // Format CVV input
+        const cvvInput = document.getElementById("cvv");
+        cvvInput.addEventListener("input", function (e) {
+          e.target.value = e.target.value.replace(/\D/g, "");
+        });
+      });
+    </script>
+  </body>
+</html>
