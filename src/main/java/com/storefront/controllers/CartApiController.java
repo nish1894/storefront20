@@ -56,6 +56,7 @@ public class CartApiController {
             logger.info("Added item to cart: {}", item.getItemId());
         } else if (item.getAction().equals("remove")) {
             sessionCartService.removeItem(sessionCart,item.getItemId());
+
         // } else if (item.getAction().equals("update") && item.getQuantity() != null) {
         //     sessionCartService.updateItemQuantity(item.getItemId(), item.getQuantity());
         } else if (item.getAction().equals("clear")) {

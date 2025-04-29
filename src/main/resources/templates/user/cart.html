@@ -15,7 +15,9 @@
             
             <div th:unless="${#lists.isEmpty(cartItems)}" class="bg-white dark:bg-gray-800 rounded-lg shadow-md">
                 <div class="cart-items">
-                    <div th:each="cartItem : ${cartItems}" class="flex flex-wrap items-center p-4 border-b border-gray-200 dark:border-gray-700">
+                    <div th:each="cartItem : ${cartItems}" 
+                    th:id="'cart-item-' + *{cartItems.}" 
+                    class="flex flex-wrap items-center p-4 border-b border-gray-200 dark:border-gray-700">
                         <div class="w-16 sm:w-20">
                             <img th:src="@{${cartItem.items.image}}" alt="Product Image" class="max-h-20 max-w-full object-contain">
                         </div>
