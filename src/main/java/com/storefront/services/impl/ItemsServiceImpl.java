@@ -95,10 +95,18 @@ public class ItemsServiceImpl implements ItemsService {
          }
     }
 
+
     @Override
-    public Page<Items> getByCategory(int page, int size, String sortField, String sortDirection) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getByCategory'");
+    public Page<Items> getItemsByCategories(List<String> categories, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        // If no categories are selected, return all items paginated
+        if (categories == null || categories.isEmpty()) {
+            return itemsRepo.findAll(pageable);
+        }
+
+        // Otherwise, filter by selected categories
+        return itemsRepo.findByCategory_NameIn(categories, pageable);
     }
 
   

@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const searchInput = document.getElementById("searchInput");
   const sortSelect = document.getElementById("sortSelect");
+  const categorySelect = document.getElementById("categorySelect");
   let timeout = null;
 
   // Search with debounce
@@ -9,7 +10,8 @@ document.addEventListener("DOMContentLoaded", function () {
     timeout = setTimeout(() => {
       const searchTerm = e.target.value;
       const [sortBy, direction] = sortSelect.value.split(",");
-      fetchProducts(searchTerm, sortBy, direction);
+      const categories = getSelectedCategories();
+      fetchProducts(searchTerm, sortBy, direction, categories);
     }, 500);
   });
 
@@ -17,12 +19,46 @@ document.addEventListener("DOMContentLoaded", function () {
   sortSelect?.addEventListener("change", function (e) {
     const searchTerm = searchInput.value;
     const [sortBy, direction] = e.target.value.split(",");
-    fetchProducts(searchTerm, sortBy, direction);
+    const categories = getSelectedCategories();
+    fetchProducts(searchTerm, sortBy, direction, categories);
   });
 
-  async function fetchProducts(title = "", sortBy = "id", direction = "asc") {
+  // Category
+  categorySelect?.addEventListener("change", function (e) {
+    const searchTerm = searchInput.value;
+    const [sortBy, direction] = sortSelect.value.split(",");
+    const categories = getSelectedCategories();
+    fetchProducts(searchTerm, sortBy, direction, categories);
+  });
+
+  // Helper function to get selected categories
+  function getSelectedCategories() {
+    const checkboxes = document.querySelectorAll(
+      '#categorySelect input[type="checkbox"]:checked'
+    );
+    return Array.from(checkboxes).map((checkbox) => checkbox.value);
+  }
+
+  async function fetchProducts(
+    title = "",
+    sortBy = "id",
+    direction = "asc",
+    categories = []
+  ) {
     try {
-      const url = new URL("/store/home/search-view", window.location.origin);
+      // For category view
+      let url;
+      if (categories.length > 0) {
+        url = new URL("/store/home/by-category-view", window.location.origin);
+        categories.forEach((category) => {
+          url.searchParams.append("categories", category);
+        });
+      } else {
+        // For search view
+        url = new URL("/store/home/search-view", window.location.origin);
+      }
+
+      // Add common parameters
       url.searchParams.append("title", title);
       url.searchParams.append("sortBy", sortBy);
       url.searchParams.append("direction", direction);
@@ -35,11 +71,9 @@ document.addEventListener("DOMContentLoaded", function () {
       // Find the products grid and update it
       const productsGrid = document.getElementById("products-grid");
       if (productsGrid) {
-        // Create a temporary container
         const temp = document.createElement("div");
         temp.innerHTML = html;
 
-        // Find the new grid content
         const newContent = temp.querySelector("#products-grid");
         if (newContent) {
           productsGrid.innerHTML = newContent.innerHTML;

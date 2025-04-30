@@ -39,7 +39,7 @@ public interface ItemsService {
     //  List<Items> getByCategory(String userId);
  
      // get contacts by category
-     Page<Items> getByCategory(int page, int size, String sortField, String sortDirection);
+     Page<Items> getItemsByCategories(List<String> categories, int page, int size);
 
 
      Page<Items> findItemsWithFilters(String title, String sortBy, String direction, Integer page, Integer size);

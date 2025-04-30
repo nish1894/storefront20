@@ -160,24 +160,24 @@ public class StoreController {
         return "store/home"; // Reuse your existing template
     }
 
-    // @GetMapping("/home/by-category-view")
-    // public String getItemsByCategories(
-    //         @RequestParam(required = false) List<String> categories,
-    //         @RequestParam(defaultValue = "0") int page,
-    //         @RequestParam(defaultValue = "10") int size,
-    //         Model model) {
+    @GetMapping("/home/by-category-view")
+    public String getItemsByCategories(
+            @RequestParam(required = false) List<String> categories,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
 
-    //     Page<Items> itemPage = itemsService.getByCategory(categories, page, size);
+        Page<Items> itemPage = itemsService.getItemsByCategories(categories, page, size);
 
-    //     model.addAttribute("items", itemPage.getContent());
-    //     model.addAttribute("currentPage", itemPage.getNumber());
-    //     model.addAttribute("totalItems", itemPage.getTotalElements());
-    //     model.addAttribute("totalPages", itemPage.getTotalPages());
+        model.addAttribute("items", itemPage.getContent());
+        model.addAttribute("currentPage", itemPage.getNumber());
+        model.addAttribute("totalItems", itemPage.getTotalElements());
+        model.addAttribute("totalPages", itemPage.getTotalPages());
 
-    //     model.addAttribute("categories", categories); // For keeping checkboxes checked
-    //     model.addAttribute("size", size);
+        model.addAttribute("categories", categories); // For keeping checkboxes checked
+        model.addAttribute("size", size);
 
-    //     return "store/home";
-    // }
+        return "store/home";
+    }
 
 }

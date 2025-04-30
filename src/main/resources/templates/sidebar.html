@@ -290,8 +290,8 @@
       </div>
     </div>
 
-    <!-- Categories -->
-    <div class="mb-6">
+  <!-- Categories -->
+    <div id="categorySelect" class="mb-6">
       <h3 class="text-sm font-medium text-gray-900 dark:text-white mb-2">
         Categories
       </h3>
@@ -299,32 +299,54 @@
         <li class="flex items-center">
           <input
             type="checkbox"
+            id="category-mens-clothing"
+            name="categories"
+            value="mens_clothing"
             class="w-4 h-4 text-blue-600 rounded border-gray-300 dark:border-gray-600"
           />
-          <label class="ms-2 text-sm text-gray-900 dark:text-gray-300"
-            >Electronics</label
-          >
+          <label for="category-mens-clothing" class="ms-2 text-sm text-gray-900 dark:text-gray-300">
+            Men's Clothing
+          </label>
         </li>
         <li class="flex items-center">
           <input
             type="checkbox"
+            id="category-womens-clothing"
+            name="categories"
+            value="womens_clothing"
             class="w-4 h-4 text-blue-600 rounded border-gray-300 dark:border-gray-600"
           />
-          <label class="ms-2 text-sm text-gray-900 dark:text-gray-300"
-            >Fashion</label
-          >
+          <label for="category-womens-clothing" class="ms-2 text-sm text-gray-900 dark:text-gray-300">
+            Women's Clothing
+          </label>
         </li>
         <li class="flex items-center">
           <input
             type="checkbox"
+            id="category-electronics"
+            name="categories"
+            value="electronics"
             class="w-4 h-4 text-blue-600 rounded border-gray-300 dark:border-gray-600"
           />
-          <label class="ms-2 text-sm text-gray-900 dark:text-gray-300"
-            >Home & Living</label
-          >
+          <label for="category-electronics" class="ms-2 text-sm text-gray-900 dark:text-gray-300">
+            Electronics
+          </label>
+        </li>
+        <li class="flex items-center">
+          <input
+            type="checkbox"
+            id="category-jewelery"
+            name="categories"
+            value="jewelery"
+            class="w-4 h-4 text-blue-600 rounded border-gray-300 dark:border-gray-600"
+          />
+          <label for="category-jewelery" class="ms-2 text-sm text-gray-900 dark:text-gray-300">
+            Jewelery
+          </label>
         </li>
       </ul>
     </div>
+
 
     <!-- Colors -->
     <div class="mb-6">
