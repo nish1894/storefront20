@@ -70,6 +70,27 @@ public class SessionCartServiceImpl implements SessionCartService {
     }
 
     @Override
+    public void subtractItem(SessionCart sessionCart, String itemId) {
+        System.out.println("Subtracting item from cart: " + itemId);
+
+        Cart cart = sessionCart.getCart();
+        List<CartItems> cartItems = cart.getCartItems();
+
+        for (CartItems ci : cartItems) {
+            if (ci.getItems().getItemId().equals(itemId)) {
+                int newQuantity = ci.getQuantity() - 1;
+                if (newQuantity <= 0) {
+                    removeItem(sessionCart, itemId); 
+                } else {
+                    ci.setQuantity(newQuantity);
+                }
+                return;
+            }
+        }
+        System.out.println("Item not found in cart: " + itemId);
+    }
+
+    @Override
     public void removeItem(SessionCart sessionCart, String itemId) {
         Cart cart = sessionCart.getCart();
         List<CartItems> cartItems = cart.getCartItems();

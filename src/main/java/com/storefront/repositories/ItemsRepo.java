@@ -1,7 +1,9 @@
 package com.storefront.repositories;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -20,9 +22,12 @@ public interface ItemsRepo extends JpaRepository<Items, String> {
     Page<Items> findByTitleContaining( String namekeyword, Pageable pageable);
 
 
-
-
+    // Search by title (case-insensitive contains)
+    Page<Items> findByTitleContainingIgnoreCase(String namekeyword, Pageable pageable);
     
     
+    // Get all items with pagination and sorting applied
+    Page<Items> findAll(Pageable pageable);
+
 
 }

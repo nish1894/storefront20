@@ -2,6 +2,7 @@ package com.storefront.controllers;
 
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -51,11 +52,26 @@ public class CartRootController {
                     }
                 }
             }
+
+            float cartTotalPrice = sessionCartService.getTotalPrice(sessionCart);
+
             
             // Add cart information to the model for all views
             model.addAttribute("cartItemCount", sessionCartService.getItemCount(sessionCart));
             model.addAttribute("cartTotalItems", sessionCartService.getTotalItems(sessionCart));
             model.addAttribute("cartTotalPrice", sessionCartService.getTotalPrice(sessionCart));
+
+             // Perform calculations
+            DecimalFormat df = new DecimalFormat("0.00");
+            float originalPrice = Float.parseFloat(df.format(1.30f * cartTotalPrice));
+            float savings = Float.parseFloat(df.format(0.46f * cartTotalPrice));
+            float tax = Float.parseFloat(df.format(0.53f * cartTotalPrice));
+
+            // Add to model
+            model.addAttribute("originalPrice", originalPrice);
+            model.addAttribute("savings", savings);
+            model.addAttribute("tax", tax);
+
             return;
         }
         

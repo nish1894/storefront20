@@ -55,6 +55,7 @@
                           id="decrement-button"
                           data-input-counter-decrement="counter-input"
                           class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
+                          th:onclick="updateCart([[${i.itemId}]], 'sub')"
                         >
                           <svg
                             class="h-2.5 w-2.5 text-gray-900 dark:text-white"
@@ -86,6 +87,8 @@
                           id="increment-button"
                           data-input-counter-increment="counter-input"
                           class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-gray-300 bg-gray-100 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700"
+                          th:onclick="updateCart([[${i.itemId}]], 'add')"
+
                         >
                           <svg
                             class="h-2.5 w-2.5 text-gray-900 dark:text-white"
@@ -198,9 +201,9 @@
                       </dt>
                       <dd
                         class="text-base font-medium text-gray-900 dark:text-white"
-                      >
-                        $7,592.00
-                      </dd>
+                        data-summary="original-price"
+                        th:text="'$'+${originalPrice}"
+                      ></dd>
                     </dl>
 
                     <dl class="flex items-center justify-between gap-4">
@@ -209,22 +212,20 @@
                       >
                         Savings
                       </dt>
-                      <dd class="text-base font-medium text-green-600">
-                        -$299.00
-                      </dd>
+                      <dd
+                        class="text-base font-medium text-green-600"
+                        data-summary="savings"
+                        th:text="'$'+${savings}"
+                      ></dd>
                     </dl>
 
                     <dl class="flex items-center justify-between gap-4">
                       <dt
                         class="text-base font-normal text-gray-500 dark:text-gray-400"
                       >
-                        Store Pickup
+                        Delivery Charges
                       </dt>
-                      <dd
-                        class="text-base font-medium text-gray-900 dark:text-white"
-                      >
-                        $99
-                      </dd>
+                      <dd class="text-base font-medium text-green-600">Free</dd>
                     </dl>
 
                     <dl class="flex items-center justify-between gap-4">
@@ -235,9 +236,9 @@
                       </dt>
                       <dd
                         class="text-base font-medium text-gray-900 dark:text-white"
-                      >
-                        $799
-                      </dd>
+                        data-summary="tax"
+                        th:text="'$'+${tax}"
+                      ></dd>
                     </dl>
                   </div>
 
@@ -251,9 +252,9 @@
                     </dt>
                     <dd
                       class="text-base font-bold text-gray-900 dark:text-white"
-                    >
-                      $8,191.00
-                    </dd>
+                      data-summary="total"
+                      th:text="'$'+${cartTotalPrice}"
+                    ></dd>
                   </dl>
                 </div>
 

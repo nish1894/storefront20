@@ -54,6 +54,8 @@ public class CartApiController {
         if (item.getAction().equals("add")) {
             sessionCartService.addItem(sessionCart, item.getItemId());
             logger.info("Added item to cart: {}", item.getItemId());
+        } else if (item.getAction().equals("sub")) {
+            sessionCartService.subtractItem(sessionCart,item.getItemId());
         } else if (item.getAction().equals("remove")) {
             sessionCartService.removeItem(sessionCart,item.getItemId());
 

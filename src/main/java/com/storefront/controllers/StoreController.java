@@ -1,5 +1,6 @@
 package com.storefront.controllers;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -7,10 +8,14 @@ import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.storefront.dto.CartItemDTO;
 import com.storefront.entities.CartItems;
@@ -111,5 +116,68 @@ public class StoreController {
         return "store/product";
     }
 
+    @GetMapping("/home/search-view")
+    public String searchItemsView(
+            @RequestParam(required = false) String title,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            Model model) {
+            
+        Page<Items> itemPage = itemsService.findItemsWithFilters(
+                title, sortBy, direction, page, size);
+                
+        model.addAttribute("items", itemPage.getContent());
+        
+        if (title != null && !title.isEmpty()) {
+            model.addAttribute("searchTerm", title);
+        }
+        
+        // Return the full home template instead of just a fragment
+        return "store/home";
+    }
+    
+    @GetMapping("/home/by-price-view")
+    public String getItemsSortedByPriceView(
+            @RequestParam(defaultValue = "asc") String direction,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Model model) {
+            
+        Page<Items> itemPage = itemsService.getItemsSortedByPrice(
+                direction, page, size);
+                
+        model.addAttribute("items", itemPage.getContent());
+        model.addAttribute("currentPage", itemPage.getNumber());
+        model.addAttribute("totalItems", itemPage.getTotalElements());
+        model.addAttribute("totalPages", itemPage.getTotalPages());
+        
+        // For building pagination URLs
+        model.addAttribute("direction", direction);
+        model.addAttribute("size", size);
+        
+        return "store/home"; // Reuse your existing template
+    }
+
+    // @GetMapping("/home/by-category-view")
+    // public String getItemsByCategories(
+    //         @RequestParam(required = false) List<String> categories,
+    //         @RequestParam(defaultValue = "0") int page,
+    //         @RequestParam(defaultValue = "10") int size,
+    //         Model model) {
+
+    //     Page<Items> itemPage = itemsService.getByCategory(categories, page, size);
+
+    //     model.addAttribute("items", itemPage.getContent());
+    //     model.addAttribute("currentPage", itemPage.getNumber());
+    //     model.addAttribute("totalItems", itemPage.getTotalElements());
+    //     model.addAttribute("totalPages", itemPage.getTotalPages());
+
+    //     model.addAttribute("categories", categories); // For keeping checkboxes checked
+    //     model.addAttribute("size", size);
+
+    //     return "store/home";
+    // }
 
 }

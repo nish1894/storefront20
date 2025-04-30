@@ -2,6 +2,7 @@
 
 import java.util.List;
 
+import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 import org.springframework.data.domain.Page;
 
 import com.storefront.entities.Items;
@@ -26,6 +27,10 @@ public interface ItemsService {
  
      // search items
     Page<Items> searchByTitle(String nameKeyword, int size, int page, String sortBy, String order);
+
+
+    Page<Items> getItemsSortedByPrice(String direction, int page, int size);
+
   
     // Page<Items> searchByEmail(String emailKeyword, int size, int page, String sortBy, String order, User user);
   
@@ -34,7 +39,9 @@ public interface ItemsService {
     //  List<Items> getByCategory(String userId);
  
      // get contacts by category
-     Page<Items> getByCategory(User user, int page, int size, String sortField, String sortDirection);
-  
+     Page<Items> getByCategory(int page, int size, String sortField, String sortDirection);
 
+
+     Page<Items> findItemsWithFilters(String title, String sortBy, String direction, Integer page, Integer size);
+     
 }

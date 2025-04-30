@@ -241,6 +241,7 @@
       <div class="relative">
         <input
           type="search"
+          id="searchInput"
           class="w-full p-2.5 text-sm rounded-lg border border-gray-300 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
           placeholder="Search products..."
         />
@@ -254,13 +255,14 @@
         >Sort By</label
       >
       <select
+        id="sortSelect"
         class="w-full p-2.5 text-sm rounded-lg border border-gray-300 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
       >
-        <option value="featured">Featured</option>
-        <option value="price_low">Price: Low to High</option>
-        <option value="price_high">Price: High to Low</option>
-        <option value="newest">Newest First</option>
-        <option value="rating">Highest Rated</option>
+        <option value="id,asc">Featured</option>
+        <option value="price,asc">Price: Low to High</option>
+        <option value="price,desc">Price: High to Low</option>
+        <option value="title,asc">Name: A to Z</option>
+        <option value="title,desc">Name: Z to A</option>
       </select>
     </div>
 
