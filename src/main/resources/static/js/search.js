@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   async function fetchProducts(
     title = "",
-    sortBy = "id",
+    sortBy = "itemId",
     direction = "asc",
     categories = []
   ) {

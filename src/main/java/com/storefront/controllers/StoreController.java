@@ -14,14 +14,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.storefront.dto.CartItemDTO;
 import com.storefront.entities.CartItems;
 import com.storefront.entities.Items;
+import com.storefront.entities.Reviews;
 import com.storefront.helpers.SessionCart;
 import com.storefront.services.ItemsService;
+import com.storefront.services.ReviewService;
 import com.storefront.services.SessionCartService;
 
 @Controller
@@ -38,6 +41,9 @@ public class StoreController {
 
     @Autowired
     private SessionCartService sessionCartService;
+
+    @Autowired 
+    private ReviewService reviewService; 
 
     
 
@@ -114,6 +120,43 @@ public class StoreController {
         model.addAttribute("product", product);
         
         return "store/product";
+    }
+
+    @GetMapping("/product/{id}")
+    public String productDetails(@PathVariable String id, Model model) {
+        // Fetch product by id from your service/repository
+        Items product = itemsService.getById(id);
+        
+        // Add product to model
+        model.addAttribute("product", product);
+        
+        // Add review data
+        List<Reviews> reviews = reviewService.getReviewsByItem(id);
+        double averageRating = reviewService.getAverageRatingForItem(id);
+        long reviewCount = reviewService.getReviewCountForItem(id);
+        Map<Integer, Long> ratingDistribution = reviewService.getRatingDistribution(id);
+        
+        model.addAttribute("reviews", reviews);
+        model.addAttribute("averageRating", averageRating);
+        model.addAttribute("reviewCount", reviewCount);
+        model.addAttribute("ratingDistribution", ratingDistribution);
+        
+        return "store/product";
+    }
+
+    @PostMapping("/product/{id}/review")
+    public String submitReview(@PathVariable String id, 
+                             @RequestParam int rating,
+                             @RequestParam String comment,
+                             @RequestParam String reviewerName) {
+        Reviews review = new Reviews();
+        review.setRating(rating);
+        review.setComment(comment);
+        review.setReviewer(reviewerName); // Or get from authenticated user
+        
+        reviewService.createReview(id, review);
+        
+        return "redirect:/store/product/" + id;
     }
 
     @GetMapping("/home/search-view")
